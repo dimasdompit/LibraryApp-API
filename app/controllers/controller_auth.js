@@ -1,14 +1,28 @@
 const modelAuth = require('../models/model_auth');
 const helper = require('../helpers/myResponse');
 const bcrypt = require('bcrypt');
+const joi = require('@hapi/joi');
+
+const registerSchema = joi.object({
+    username: joi.string()
+        .alphanum()
+        .min(4)
+        .max(30)
+        .required(),
+    password: joi.string()
+        .pattern(new RegExp('^[a-zA-Z0-9]{6,30}$'))
+        .required(),
+    role: joi.number().integer().required()
+});
 
 module.exports = {
     register: async function (request, response) {
         const setData = request.body;
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(setData.password, salt);
-        setData.password = hash;
         try {
+            await registerSchema.validateAsync(setData);
+            setData.password = hash;
             const result = await modelAuth.registerModel(setData);
             delete result.password;
             return helper.response(response, 'success', result, 201);
