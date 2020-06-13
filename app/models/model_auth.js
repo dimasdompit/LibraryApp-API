@@ -15,5 +15,16 @@ module.exports = {
                 resolve(newData);
             });
         });
+    },
+    loginModel: function (username) {
+        return new Promise((resolve, reject) => {
+            let sql = 'SELECT * FROM users WHERE username=?';
+            connection.query(sql, username, (error, result) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(result);
+            });
+        });
     }
 }
