@@ -18,7 +18,7 @@ Then, Clone this repo to your project.
 $ git clone https://github.com/dimasdompit/libraryapp-api.git
 ```
 
-After that, install using : 
+After that, install all dependencies using : 
 
 [*yarn install* command](https://classic.yarnpkg.com/en/docs/install/#windows-stable)
 ```
@@ -33,6 +33,9 @@ $ npm install
 ```
 
 And then run the app
+```
+$ npm start
+```
 
 #### Package Dependencies
 
