@@ -4,7 +4,7 @@ Library App RESTful API Back-end with Node JS & ExpressJS using MySQL
 
 ![https://nodejs.org/en/](https://i.imgur.com/ppliPxa.png)
 
-Node JS as an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications.
+[Node.js](https://nodejs.org/en/) as an asynchronous event-driven JavaScript runtime, Node.js is designed to build scalable network applications.
 
 ![https://expressjs.com/](https://i.imgur.com/pgAnAsr.png)
 
