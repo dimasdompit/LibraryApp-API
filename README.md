@@ -76,3 +76,4 @@ And then run the app
 7. Git
 
 ## License
+[MIT License](https://github.com/dimasdompit/libraryapp-api/blob/master/LICENSE)
