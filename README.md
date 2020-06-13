@@ -1,6 +1,6 @@
 # DOMSLibrary-API
 
-## Library App RESTful API Back-end with Node JS & ExpressJS using MySQL
+### Library App RESTful API Back-end with Node JS & ExpressJS using MySQL
 
 ![https://nodejs.org/en/](https://i.imgur.com/ppliPxa.png)
 
