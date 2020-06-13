@@ -14,6 +14,9 @@ Fast, unopinionated, minimalist RESTful API build by [ExpressJS](https://express
 Before installation, [download and install Node.js](https://nodejs.org/en/download/). *Node.js Version: 12.18.0* or higher version.
 
 Then, Clone this repo to your project.
+```
+$ git clone https://github.com/dimasdompit/libraryapp-api.git
+```
 
 After that, install using : 
 
