@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const joi = require('@hapi/joi');
 const jwt = require('jsonwebtoken');
 const config = require('../../src/config/global');
+const tokenList = {};
 
 const registerSchema = joi.object({
     username: joi.string()
@@ -48,9 +49,17 @@ module.exports = {
                     const token = jwt.sign(tokenData, config.jwtSecretKey, {
                         expiresIn: config.tokenLife
                     });
+                    const refreshToken = jwt.sign(tokenData, config.jwtSecretKey, {
+                        expiresIn: config.refreshToken
+                    })
                     result[0].token = token;
-                    console.log(result);
-                    return helper.response(response, 'success', result, 200);
+                    result[0].refreshToken = refreshToken;
+                    const newData = {
+                        status: 'Login Success!',
+                        ...result[0]
+                    };
+                    tokenList[refreshToken] = newData;
+                    return helper.response(response, 'success', newData, 200);
                 }
                 return helper.response(response, 'fail', 'Incorrect Username or Password!', 400);
             }
@@ -58,6 +67,18 @@ module.exports = {
         } catch (err) {
             console.log(err);
             return helper.response(response, 'fail', 'Internal Server Error', 500);
+        }
+    },
+
+    token: async function (request, response) {
+        try {
+            const setData = request.body;
+            const refreshToken = setData.refreshToken;
+            const decoded = jwt.verify(refreshToken, config.jwtSecretKey);
+            console.log(decoded);
+            // BELOM KELAR
+        } catch (error) {
+            console.log(error);
         }
     }
 };

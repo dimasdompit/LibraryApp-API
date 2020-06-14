@@ -5,5 +5,6 @@ const upload = require('../helpers/upload');
 
 router.post('/register', upload.none(), authController.register);
 router.post('/login', upload.none(), authController.login);
+router.post('/token', upload.none(), authController.token);
 
 module.exports = router;
