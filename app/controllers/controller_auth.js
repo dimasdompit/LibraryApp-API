@@ -2,6 +2,8 @@ const modelAuth = require('../models/model_auth');
 const helper = require('../helpers/myResponse');
 const bcrypt = require('bcrypt');
 const joi = require('@hapi/joi');
+const jwt = require('jsonwebtoken');
+const config = require('../../src/config/global');
 
 const registerSchema = joi.object({
     username: joi.string()
@@ -40,6 +42,14 @@ module.exports = {
                 const checkPass = bcrypt.compareSync(loginData.password, hashPass);
                 if (checkPass) {
                     delete result[0].password;
+                    const tokenData = {
+                        ...result[0]
+                    };
+                    const token = jwt.sign(tokenData, config.jwtSecretKey, {
+                        expiresIn: config.tokenLife
+                    });
+                    result[0].token = token;
+                    console.log(result);
                     return helper.response(response, 'success', result, 200);
                 }
                 return helper.response(response, 'fail', 'Incorrect Username or Password!', 400);
