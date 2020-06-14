@@ -2,11 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/controller_book');
 const upload = require('../helpers/upload')
-const {
-    verifyJwtToken
-} = require('../middleware/auth_middleware');
 
-router.get('/', verifyJwtToken, bookController.showAllBooks);
+router.get('/', bookController.showAllBooks);
 router.post('/', upload.single('image'), bookController.addBooks);
 router.put('/:id', upload.single('image'), bookController.updateBooks);
 router.delete('/:id', bookController.deleteBooks);
