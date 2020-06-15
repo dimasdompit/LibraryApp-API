@@ -65,11 +65,13 @@ $ npm start
 - [x] Search
 - [x] Pagination
 - [x] Allowed CORS
-- [x] Password Hashing
 - [x] Able to test via Postman
 
+### Optional :
+- [x] Password Hashing
+- [x] Authorization & Authentication with JWT
+
 #### In progress : 
-- [ ] Authorization & Authentication with JWT
 - [ ] Flowchart App
 - [ ] Readability Code
 - [ ] More
@@ -78,7 +80,7 @@ $ npm start
 1. Visual Studio Code
 2. XAMPP (MySQL)
 3. Postman
-4. Git Bash CMD
+4. Git Bash Terminal
 6. Search Engine (Google)
 7. Git
 
