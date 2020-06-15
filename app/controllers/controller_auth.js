@@ -70,26 +70,31 @@ module.exports = {
             console.log(err);
             return helper.response(response, 'fail', 'Internal Server Error', 500);
         }
-    }
+    },
 
-    // generateAccessToken: async function (request, response) {
-    //     try {
-    //         const setData = request.body
-    //         const username = setData.username;
-    //         const refreshToken = request.body.refreshToken;
-    //         const decoded = jwt.verify(refreshToken, config.jwtRefreshKey);
-    //         if ((refreshToken in tokenList) && (tokenList[refreshToken] === username)) {
-    //             const newData = {
-    //                 ...setData
-    //             }
-    //             const token = jwt.sign(newData, config.jwtRefreshKey);
-    //             return helper.response(response, 'success', {
-    //                 token: token
-    //             }, 200);
-    //         }
-    //         // BELOM KELAR
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
+    generateRefreshToken: async function (request, response) {
+        try {
+            const setData = request.body
+            const username = setData.username;
+            const refreshToken = request.body.refreshToken;
+            if ((refreshToken in tokenList) && (tokenList[refreshToken] === username)) {
+                const decoded = jwt.verify(refreshToken, config.jwtRefreshKey);
+                const token = jwt.sign(decoded, config.jwtSecretKey, {
+                    expiresIn: config.tokenLife
+                });
+                const newRefreshToken = jwt.sign(decoded, config.jwtRefreshKey);
+                const newData = {
+                    status: 'Refresh Token Success',
+                    data: {
+                        token: token,
+                        refreshToken: newRefreshToken
+                    }
+                }
+                return helper.response(response, 'success', newData, 204);
+            }
+            return helper.response(response, 'fail', 'Invalid', 401);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 };
