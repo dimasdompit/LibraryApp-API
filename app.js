@@ -15,7 +15,12 @@ connection.connect(function (err) {
     console.log('Database connected!');
 });
 
-app.use(cors());
+const corsOption = {
+    origin: 'http://localhost:3000',
+    optionSuccessStatus: 200
+}
+
+app.use(cors(corsOption));
 app.use(morgan('dev'));
 // Use body-parser to get data from request body
 app.use(bodyParser.urlencoded({
