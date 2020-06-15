@@ -23,7 +23,7 @@ module.exports = {
     },
 
     verifyJwtRefreshToken: function (request, response, next) {
-        const refreshToken = request.body.refreshToken || request.query.refreshToken || request.headers.refreshToken
+        let refreshToken = request.body.refreshToken || request.query.refreshToken || request.headers['refresh-token'];
         try {
             if (refreshToken) {
                 const decode = jwt.verify(refreshToken, jwtRefreshKey, {

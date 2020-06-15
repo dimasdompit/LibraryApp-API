@@ -76,7 +76,7 @@ module.exports = {
 
     generateRefreshToken: async function (request, response) {
         const setData = request.body;
-        const refreshToken = setData.refreshToken;
+        const refreshToken = request.body.refreshToken || request.headers['refresh-token'];
         try {
             if ((refreshToken) && (refreshToken in tokenList)) {
                 const decoded = request.decodeRefreshToken;
@@ -93,10 +93,10 @@ module.exports = {
                         refreshToken: newRefreshToken
                     }
                 }
-                tokenList[setData.refreshToken].token = token;
+                tokenList[setData.refreshToken] = token;
                 return helper.response(response, 'success', newResponse, 200);
             } else {
-                return helper.response(response, 'fail', 'Invalid Request', 404);
+                return helper.response(response, 'fail', 'Invalid Request', 403);
             }
         } catch (error) {
             console.log(error);
