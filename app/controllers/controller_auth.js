@@ -34,7 +34,11 @@ module.exports = {
             setData.password = hash;
             const result = await modelAuth.registerModel(setData);
             delete result.password;
-            return helper.response(response, 'success', result, 201);
+            const newData = {
+                status: 'Registered Successfully!',
+                ...result
+            }
+            return helper.response(response, 'success', newData, 201);
         } catch (err) {
             console.log(err)
             return helper.response(response, 'fail', 'Internal Server Error', 500);
