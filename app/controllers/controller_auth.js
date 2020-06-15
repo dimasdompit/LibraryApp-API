@@ -7,6 +7,9 @@ const config = require('../../src/config/global');
 const {
     token
 } = require('morgan');
+const {
+    jwtRefreshKey
+} = require('../../src/config/global');
 let tokenList = {};
 
 const registerSchema = joi.object({
@@ -59,8 +62,7 @@ module.exports = {
                         status: 'Login Success!',
                         ...result[0]
                     };
-                    tokenList[refreshToken] = result[0].username;
-                    console.log(tokenList);
+                    tokenList[refreshToken] = newData.username;
                     return helper.response(response, 'success', newData, 200);
                 }
                 return helper.response(response, 'fail', 'Incorrect Username or Password!', 400);
@@ -73,28 +75,32 @@ module.exports = {
     },
 
     generateRefreshToken: async function (request, response) {
+        const setData = request.body;
+        const refreshToken = setData.refreshToken;
         try {
-            const setData = request.body
-            const username = setData.username;
-            const refreshToken = request.body.refreshToken;
-            if ((refreshToken in tokenList) && (tokenList[refreshToken] === username)) {
-                const decoded = jwt.verify(refreshToken, config.jwtRefreshKey);
+            if ((refreshToken) && (refreshToken in tokenList)) {
+                const decoded = request.decodeRefreshToken;
                 const token = jwt.sign(decoded, config.jwtSecretKey, {
                     expiresIn: config.tokenLife
                 });
-                const newRefreshToken = jwt.sign(decoded, config.jwtRefreshKey);
-                const newData = {
+                const newRefreshToken = jwt.sign(decoded, config.jwtRefreshKey, {
+                    expiresIn: config.refreshToken
+                });
+                const newResponse = {
                     status: 'Refresh Token Success',
                     data: {
                         token: token,
                         refreshToken: newRefreshToken
                     }
                 }
-                return helper.response(response, 'success', newData, 204);
+                tokenList[setData.refreshToken].token = token;
+                return helper.response(response, 'success', newResponse, 200);
+            } else {
+                return helper.response(response, 'fail', 'Invalid Request', 404);
             }
-            return helper.response(response, 'fail', 'Invalid', 401);
         } catch (error) {
             console.log(error);
+            return helper.response(response, 'fail', 'Internal Server Error', 500);
         }
     }
 };
