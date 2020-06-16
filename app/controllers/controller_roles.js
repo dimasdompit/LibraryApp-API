@@ -15,7 +15,7 @@ module.exports = {
     addRoles: async function (request, response) {
         const setData = request.body;
         try {
-            const result = await modelRoles.getAllRolesModel(setData);
+            const result = await modelRoles.addRolesModel(setData);
             return helper.response(response, 'success', result, 201);
         } catch (err) {
             console.log(err);

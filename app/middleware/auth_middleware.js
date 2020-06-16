@@ -40,5 +40,48 @@ module.exports = {
             }
             return helper.response(response, 'fail', 'Invalid Token', 401);
         }
+    },
+
+    is_Admin: function (request, response, next) {
+        const role = request.decodeToken.roles_id;
+        try {
+            if (role !== 1) {
+                return helper.response(response, 'fail', 'Not Allowed', 401);
+            } else {
+                next();
+            }
+        } catch (error) {
+            console.log(error);
+            return helper.response(response, 'fail', 'Internal Server Error', 500);
+        }
+    },
+
+    is_User: function (request, response, next) {
+        const role = request.decodeToken.roles_id;
+        try {
+            if (role === 1 || role === 2 || role === 3) {
+                next();
+            } else {
+                return helper.response(response, 'fail', 'Not Allowed', 401);
+            }
+        } catch (error) {
+            console.log(error);
+            return helper.response(response, 'fail', 'Internal Server Error', 500);
+        }
+    },
+
+    is_Staff: function (request, response, next) {
+        const role = request.decodeToken.roles_id;
+        console.log(role);
+        try {
+            if (role === 1 || role === 3) {
+                next()
+            } else {
+                return helper.response(response, 'fail', 'Not Allowed', 401);
+            }
+        } catch (error) {
+            console.log(error);
+            return helper.response(response, 'fail', 'Internal Server Error', 500);
+        }
     }
 };

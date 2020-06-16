@@ -21,7 +21,7 @@ const registerSchema = joi.object({
     password: joi.string()
         .pattern(new RegExp('^[a-zA-Z0-9]{6,30}$'))
         .required(),
-    role: joi.number().integer().required()
+    roles_id: joi.number().integer().required()
 });
 
 module.exports = {

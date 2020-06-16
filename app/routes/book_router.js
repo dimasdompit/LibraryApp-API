@@ -2,11 +2,16 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/controller_book');
 const upload = require('../helpers/upload')
+const {
+    is_Admin,
+    is_User,
+    is_Staff
+} = require('../middleware/auth_middleware');
 
-router.get('/', bookController.showAllBooks);
-router.post('/', upload.single('image'), bookController.addBooks);
-router.put('/:id', upload.single('image'), bookController.updateBooks);
-router.delete('/:id', bookController.deleteBooks);
-router.get('/search', bookController.searchBooks);
+router.get('/', is_User, bookController.showAllBooks);
+router.post('/', is_Staff, upload.single('image'), bookController.addBooks);
+router.put('/:id', is_Staff, upload.single('image'), bookController.updateBooks);
+router.delete('/:id', is_Admin, bookController.deleteBooks);
+router.get('/search', is_User, bookController.searchBooks);
 
 module.exports = router;
