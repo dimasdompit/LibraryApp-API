@@ -14,7 +14,6 @@ const addBookSchema = joi.object({
 module.exports = {
 
     showAllBooks: async function (request, response) {
-        console.log(request.decodeToken);
         try {
             const result = await modelBook.showAllBookModel();
             return helper.response(response, 'success', result, 200);

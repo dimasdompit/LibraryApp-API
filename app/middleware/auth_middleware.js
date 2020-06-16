@@ -72,7 +72,6 @@ module.exports = {
 
     is_Staff: function (request, response, next) {
         const role = request.decodeToken.roles_id;
-        console.log(role);
         try {
             if (role === 1 || role === 3) {
                 next()
