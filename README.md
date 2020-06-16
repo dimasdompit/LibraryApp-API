@@ -50,6 +50,7 @@ $ npm start
 |   Morgan   | https://github.com/expressjs/morgan |
 |   dotenv   | https://github.com/motdotla/dotenv |
 |   BCRYPT   | https://github.com/kelektiv/node.bcrypt.js/ |
+|   jsonwebtoken   | https://github.com/auth0/node-jsonwebtoken |
 
 ## Features
 * Database CRUD (MySQL)
@@ -67,13 +68,14 @@ $ npm start
 - [x] Allowed CORS
 - [x] Able to test via Postman
 
-### Optional :
+#### Optional :
 - [x] Password Hashing
 - [x] Authorization & Authentication with JWT
 
 #### In progress : 
 - [ ] Flowchart App
 - [ ] Readability Code
+- [ ] Refactor Code
 - [ ] More
 
 ## Tools/Software
