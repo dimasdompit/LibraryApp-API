@@ -18,7 +18,7 @@ module.exports = {
     },
     loginModel: function (username) {
         return new Promise((resolve, reject) => {
-            let sql = 'SELECT * FROM users WHERE username=?';
+            let sql = 'SELECT users.id, users.username, users.password, roles.roles_name AS roles, users.created_at, users.updated_at FROM users INNER JOIN roles USING (roles_id) WHERE username=?';
             connection.query(sql, username, (error, result) => {
                 if (error) {
                     reject(error);

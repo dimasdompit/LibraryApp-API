@@ -10,7 +10,7 @@
 
 Fast, unopinionated, minimalist RESTful API build by [ExpressJS](https://expressjs.com/)
 
-## Installation
+## Guide to Installation
 Before installation, [download and install Node.js](https://nodejs.org/en/download/). *Node.js Version: 12.18.0* or higher version.
 
 Then, Clone this repo to your project.
@@ -59,7 +59,7 @@ $ npm start
 * etc.
 
 ## Minimum-Requirements
-#### Completed :
+#### Main Requirements :
 - [x] CRUD
 - [x] Image Upload
 - [x] Sort
@@ -67,16 +67,11 @@ $ npm start
 - [x] Pagination
 - [x] Allowed CORS
 - [x] Able to test via Postman
+- [x] Flowchart App
 
 #### Optional :
 - [x] Password Hashing
 - [x] Authorization & Authentication with JWT
-
-#### In progress : 
-- [ ] Flowchart App
-- [ ] Readability Code
-- [ ] Refactor Code
-- [ ] More
 
 ## Tools/Software
 1. Visual Studio Code
@@ -88,3 +83,5 @@ $ npm start
 
 ## License
 [MIT License](https://github.com/dimasdompit/libraryapp-api/blob/master/LICENSE)
+
+## Flowchart

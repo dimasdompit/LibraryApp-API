@@ -4,12 +4,6 @@ const bcrypt = require('bcrypt');
 const joi = require('@hapi/joi');
 const jwt = require('jsonwebtoken');
 const config = require('../../src/config/global');
-const {
-    token
-} = require('morgan');
-const {
-    jwtRefreshKey
-} = require('../../src/config/global');
 let tokenList = {};
 
 const registerSchema = joi.object({

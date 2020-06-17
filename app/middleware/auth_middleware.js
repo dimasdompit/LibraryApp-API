@@ -43,9 +43,9 @@ module.exports = {
     },
 
     is_Admin: function (request, response, next) {
-        const role = request.decodeToken.roles_id;
+        const role = request.decodeToken.roles;
         try {
-            if (role !== 1) {
+            if (role !== 'admin') {
                 return helper.response(response, 'fail', 'Not Allowed', 401);
             } else {
                 next();
@@ -57,9 +57,9 @@ module.exports = {
     },
 
     is_User: function (request, response, next) {
-        const role = request.decodeToken.roles_id;
+        const role = request.decodeToken.roles;
         try {
-            if (role === 1 || role === 2 || role === 3) {
+            if (role === 'admin' || role === 'user' || role === 'staff') {
                 next();
             } else {
                 return helper.response(response, 'fail', 'Not Allowed', 401);
@@ -71,9 +71,9 @@ module.exports = {
     },
 
     is_Staff: function (request, response, next) {
-        const role = request.decodeToken.roles_id;
+        const role = request.decodeToken.roles;
         try {
-            if (role === 1 || role === 3) {
+            if (role === 'admin' || role === 'staff') {
                 next()
             } else {
                 return helper.response(response, 'fail', 'Not Allowed', 401);
