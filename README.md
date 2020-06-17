@@ -16,6 +16,7 @@ Before installation, [download and install Node.js](https://nodejs.org/en/downlo
 Then, Clone this repo to your project.
 ```
 $ git clone https://github.com/dimasdompit/libraryapp-api.git
+$ cd libraryapp-api
 ```
 
 After that, install all dependencies using : 
@@ -35,6 +36,11 @@ $ npm install
 And then run the app
 ```
 $ npm start
+```
+
+Run the server on
+```
+http://localhost:3000/
 ```
 
 #### Package Dependencies
