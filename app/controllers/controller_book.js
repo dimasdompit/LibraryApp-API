@@ -81,6 +81,44 @@ module.exports = {
             console.log(err);
             return helper.response(response, 'fail', 'Internal Server Error', 500);
         }
+    },
+
+    borrowBooks: async function (request, response) {
+        const id = request.params.id;
+        try {
+            const result = await modelBook.getBookById(id);
+            if (result[0].status === 'Available') {
+                let status = result[0].status;
+                status = 'Not Available';
+                await modelBook.borrowBookModel(status, id);
+                const message = `You have successfully borrowed a '${result[0].title}' book`
+                return helper.response(response, 'success', message, 200);
+            } else {
+                return helper.response(response, 'fail', `Sorry, '${result[0].title}' is Not Available!`, 401);
+            }
+        } catch (error) {
+            console.log(error);
+            return helper.response(response, 'fail', 'Internal Server Error', 500);
+        }
+    },
+
+    returnBooks: async function (request, response) {
+        const id = request.params.id;
+        try {
+            const result = await modelBook.getBookById(id);
+            if (result[0].status === 'Not Available') {
+                let status = result[0].status;
+                status = 'Available';
+                await modelBook.returnBookModel(status, id);
+                const message = `You have returned the '${result[0].title}' book, thank you!`;
+                return helper.response(response, 'success', message, 200);
+            } else {
+                return helper.response(response, 'fail', 'There are no books to return', 401);
+            }
+        } catch (error) {
+            console.log(error);
+            return helper.response(response, 'fail', 'Internal Server Error', 500);
+        }
     }
 
 };
