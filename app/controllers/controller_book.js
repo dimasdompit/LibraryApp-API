@@ -61,6 +61,9 @@ module.exports = {
             return helper.response(response, 'success', result, 201);
         } catch (err) {
             console.log(err);
+            if (err.response === undefined) {
+                return helper.response(response, 'fail', 'Format image must be : JPG/JPEG/PNG', 401);
+            }
             return helper.response(response, 'fail', 'Internal Server Error', 500);
         }
     },
@@ -85,6 +88,9 @@ module.exports = {
             return helper.response(response, 'fail', `Book with ID = ${id} not found`, 404);
         } catch (err) {
             console.log(err)
+            if (err.response === undefined) {
+                return helper.response(response, 'fail', 'Format image must be : JPG/JPEG/PNG', 401);
+            }
             return helper.response(response, 'fail', 'Internal Server Error', 500);
         }
     },
