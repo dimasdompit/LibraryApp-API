@@ -21,18 +21,26 @@ const registerSchema = joi.object({
 module.exports = {
     register: async function (request, response) {
         const setData = request.body;
+        const data = await modelAuth.loginModel(setData.username);
+        const existData = {
+            ...data[0]
+        }
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(setData.password, salt);
         try {
-            await registerSchema.validateAsync(setData);
-            setData.password = hash;
-            const result = await modelAuth.registerModel(setData);
-            delete result.password;
-            const newData = {
-                status: 'Registered Successfully!',
-                ...result
+            if (setData.username == existData.username) {
+                return helper.response(response, 'fail', 'username is already taken!', 401)
+            } else {
+                await registerSchema.validateAsync(setData);
+                setData.password = hash;
+                const result = await modelAuth.registerModel(setData);
+                delete result.password;
+                const newData = {
+                    status: 'Registered Successfully!',
+                    ...result
+                }
+                return helper.response(response, 'success', newData, 201);
             }
-            return helper.response(response, 'success', newData, 201);
         } catch (err) {
             console.log(err)
             return helper.response(response, 'fail', 'Internal Server Error', 500);
