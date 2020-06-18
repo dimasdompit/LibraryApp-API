@@ -35,6 +35,21 @@ module.exports = {
         }
     },
 
+    getBookDetail: async function (request, response) {
+        const id = request.params.id;
+        try {
+            const result = await modelBook.getBookDetailModel(id);
+            if (result[0]) {
+                return helper.response(response, 'success', result, 200);
+            } else {
+                return helper.response(response, 'fail', `Book with ID = ${id} Not Found`, 401)
+            }
+        } catch (err) {
+            console.log(err);
+            return helper.response(response, 'fail', 'Internal Server Error');
+        }
+    },
+
     addBooks: async function (request, response) {
         const setData = request.body;
         if (request.file) {
@@ -57,14 +72,14 @@ module.exports = {
         if (request.file) {
             const newImage = request.file.filename;
             setData.image = newImage;
-            const existData = await modelBook.getBookById(id);
+            const existData = await modelBook.getBookDetailModel(id);
             existImage = existData[0].image;
         }
         try {
             const result = await modelBook.updateBookModel(setData, id);
             if (result.id == id) {
                 if (existImage != null) fs.unlinkSync(`./assets/images/${existImage}`)
-                const newData = await modelBook.getBookById(id);
+                const newData = await modelBook.getBookDetailModel(id);
                 return helper.response(response, 'success', newData, 200);
             }
             return helper.response(response, 'fail', `Book with ID = ${id} not found`, 404);
@@ -88,7 +103,7 @@ module.exports = {
     borrowBooks: async function (request, response) {
         const id = request.params.id;
         try {
-            const result = await modelBook.getBookById(id);
+            const result = await modelBook.getBookDetailModel(id);
             if (result[0].status === 'Available') {
                 let status = result[0].status;
                 status = 'Not Available';
@@ -107,7 +122,7 @@ module.exports = {
     returnBooks: async function (request, response) {
         const id = request.params.id;
         try {
-            const result = await modelBook.getBookById(id);
+            const result = await modelBook.getBookDetailModel(id);
             if (result[0].status === 'Not Available') {
                 let status = result[0].status;
                 status = 'Available';

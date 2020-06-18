@@ -102,7 +102,7 @@ module.exports = {
                 tokenList[setData.refreshToken] = token;
                 return helper.response(response, 'success', newResponse, 200);
             } else {
-                return helper.response(response, 'fail', 'Invalid Request', 403);
+                return helper.response(response, 'fail', 'Invalid Request Token', 403);
             }
         } catch (error) {
             console.log(error);

@@ -9,6 +9,7 @@ const {
 } = require('../middleware/auth_middleware');
 
 router.get('/', is_User, bookController.showAllBooks);
+router.get('/:id', is_User, bookController.getBookDetail);
 router.post('/', is_Staff, upload.single('image'), bookController.addBooks);
 router.put('/:id', is_Staff, upload.single('image'), bookController.updateBooks);
 router.put('/borrow/:id', is_User, bookController.borrowBooks);

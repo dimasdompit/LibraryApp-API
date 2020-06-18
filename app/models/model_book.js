@@ -16,7 +16,7 @@ module.exports = {
         });
     },
 
-    getBookById: function (id) {
+    getBookDetailModel: function (id) {
         return new Promise((resolve, reject) => {
             let sql = `SELECT book.id, book.title, book.description, book.image, genre.genre_name AS genre, author.author_name AS author, book.status, book.created_at, book.updated_at FROM book INNER JOIN genre USING (genre_id) INNER JOIN author USING (author_id) WHERE book.id=?`;
             connection.query(sql, id, (err, result) => {
