@@ -14,10 +14,21 @@ const addBookSchema = joi.object({
 module.exports = {
 
     showAllBooks: async function (request, response) {
-        console.log(request.decodeToken);
+        // console.log(request.decodeToken);
+
+        const search = request.query.search || '';
+        let sortBy = request.query.sortBy || 'created_at';
+        let sortType = request.query.sortType || 'DESC';
+        let limit = parseInt(request.query.limit) || 5;
+        let page = parseInt(request.query.page) || 1;
+
         try {
-            const result = await modelBook.showAllBookModel();
-            return helper.response(response, 'success', result, 200);
+            const result = await modelBook.showAllBookModel(search, sortBy, sortType, limit, page);
+            if (result[0]) {
+                return helper.response(response, 'success', result, 200);
+            } else {
+                return helper.response(response, 'fail', 'Book Not Found', 404);
+            }
         } catch (err) {
             console.log(err);
             return helper.response(response, 'fail', 'Internal Server Error', 500);
@@ -65,24 +76,24 @@ module.exports = {
         }
     },
 
-    searchBooks: async function (request, response) {
-        const keyword = request.query.keyword || '';
-        let limit = parseInt(request.query.limit) || 5;
-        let pagination = parseInt(request.query.pagination) || 1;
-        let sortBy = request.query.sortBy || 'created_at';
-        let sortType = request.query.sortType || 'ASC';
-        try {
-            const result = await modelBook.searchBookModel(keyword, sortBy, sortType, limit, pagination);
-            if (result[0]) {
-                return helper.response(response, 'success', result, 200);
-            } else {
-                return helper.response(response, 'fail', 'Not Found', 404);
-            }
-        } catch (err) {
-            console.log(err);
-            return helper.response(response, 'fail', 'Internal Server Error', 500);
-        }
-    },
+    // searchBooks: async function (request, response) {
+    //     const keyword = request.query.keyword || '';
+    //     let limit = parseInt(request.query.limit) || 5;
+    //     let pagination = parseInt(request.query.pagination) || 1;
+    //     let sortBy = request.query.sortBy || 'created_at';
+    //     let sortType = request.query.sortType || 'ASC';
+    //     try {
+    //         const result = await modelBook.searchBookModel(keyword, sortBy, sortType, limit, pagination);
+    //         if (result[0]) {
+    //             return helper.response(response, 'success', result, 200);
+    //         } else {
+    //             return helper.response(response, 'fail', 'Not Found', 404);
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //         return helper.response(response, 'fail', 'Internal Server Error', 500);
+    //     }
+    // },
 
     borrowBooks: async function (request, response) {
         const id = request.params.id;
