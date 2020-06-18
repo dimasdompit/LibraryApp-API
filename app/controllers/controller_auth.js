@@ -42,8 +42,13 @@ module.exports = {
                 return helper.response(response, 'success', newData, 201);
             }
         } catch (err) {
-            console.log(err)
-            return helper.response(response, 'fail', 'Internal Server Error', 500);
+            console.log(err.message);
+            const errorMessage = err.message;
+            if (err.message) {
+                return helper.response(response, 'fail', errorMessage, 401);
+            } else {
+                return helper.response(response, 'fail', 'Internal Server Error', 500);
+            }
         }
     },
     login: async function (request, response) {
@@ -102,7 +107,7 @@ module.exports = {
                 tokenList[setData.refreshToken] = token;
                 return helper.response(response, 'success', newResponse, 200);
             } else {
-                return helper.response(response, 'fail', 'Invalid Request Token', 403);
+                return helper.response(response, 'fail', 'Invalid Request', 403);
             }
         } catch (error) {
             console.log(error);
