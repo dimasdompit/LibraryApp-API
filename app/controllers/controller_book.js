@@ -114,7 +114,7 @@ module.exports = {
                 let status = result[0].status;
                 status = 'Not Available';
                 await modelBook.borrowBookModel(status, id);
-                const message = `You have successfully borrowed a '${result[0].title}' book`
+                const message = `You have successfully borrowed '${result[0].title}' book`
                 return helper.response(response, 'success', message, 200);
             } else {
                 return helper.response(response, 'fail', `Sorry, '${result[0].title}' is Not Available!`, 401);
@@ -133,7 +133,7 @@ module.exports = {
                 let status = result[0].status;
                 status = 'Available';
                 await modelBook.returnBookModel(status, id);
-                const message = `You have returned the '${result[0].title}' book, thank you!`;
+                const message = `You have returned '${result[0].title}' book, thank you!`;
                 return helper.response(response, 'success', message, 200);
             } else {
                 return helper.response(response, 'fail', 'There are no books to return', 401);
