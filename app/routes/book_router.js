@@ -14,6 +14,5 @@ router.put('/:id', is_Staff, upload.single('image'), bookController.updateBooks)
 router.put('/borrow/:id', is_User, bookController.borrowBooks);
 router.put('/return/:id', is_User, bookController.returnBooks);
 router.delete('/:id', is_Admin, bookController.deleteBooks);
-// router.get('/search', is_User, bookController.searchBooks);
 
 module.exports = router;

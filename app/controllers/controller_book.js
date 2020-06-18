@@ -76,25 +76,6 @@ module.exports = {
         }
     },
 
-    // searchBooks: async function (request, response) {
-    //     const keyword = request.query.keyword || '';
-    //     let limit = parseInt(request.query.limit) || 5;
-    //     let pagination = parseInt(request.query.pagination) || 1;
-    //     let sortBy = request.query.sortBy || 'created_at';
-    //     let sortType = request.query.sortType || 'ASC';
-    //     try {
-    //         const result = await modelBook.searchBookModel(keyword, sortBy, sortType, limit, pagination);
-    //         if (result[0]) {
-    //             return helper.response(response, 'success', result, 200);
-    //         } else {
-    //             return helper.response(response, 'fail', 'Not Found', 404);
-    //         }
-    //     } catch (err) {
-    //         console.log(err);
-    //         return helper.response(response, 'fail', 'Internal Server Error', 500);
-    //     }
-    // },
-
     borrowBooks: async function (request, response) {
         const id = request.params.id;
         try {
