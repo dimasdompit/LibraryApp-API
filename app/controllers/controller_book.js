@@ -1,6 +1,7 @@
 const helper = require('../helpers/myResponse');
 const modelBook = require('../models/model_book');
 const joi = require('@hapi/joi');
+const fs = require('fs');
 
 const addBookSchema = joi.object({
     title: joi.required(),
@@ -14,7 +15,6 @@ const addBookSchema = joi.object({
 module.exports = {
 
     showAllBooks: async function (request, response) {
-        // console.log(request.decodeToken);
 
         const search = request.query.search || '';
         let sortBy = request.query.sortBy || 'created_at';
@@ -52,13 +52,22 @@ module.exports = {
 
     updateBooks: async function (request, response) {
         const setData = request.body;
-        if (request.file) {
-            setData.image = request.file.filename;
-        }
         const id = request.params.id;
+        let existImage = null;
+        if (request.file) {
+            const newImage = request.file.filename;
+            setData.image = newImage;
+            const existData = await modelBook.getBookById(id);
+            existImage = existData[0].image;
+        }
         try {
             const result = await modelBook.updateBookModel(setData, id);
-            return helper.response(response, 'success', result, 200);
+            if (result.id == id) {
+                if (existImage != null) fs.unlinkSync(`./assets/images/${existImage}`)
+                const newData = await modelBook.getBookById(id);
+                return helper.response(response, 'success', newData, 200);
+            }
+            return helper.response(response, 'fail', `Book with ID = ${id} not found`, 404);
         } catch (err) {
             console.log(err)
             return helper.response(response, 'fail', 'Internal Server Error', 500);
