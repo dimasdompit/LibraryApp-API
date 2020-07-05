@@ -14,6 +14,11 @@ const addBookSchema = joi.object({
 
 module.exports = {
   showAllBooks: async function (request, response) {
+    const totalBooks = await modelBook.totalBooksModel();
+    const totalData = {
+      ...totalBooks,
+    };
+    console.log(totalBooks);
     const search = request.query.search || "";
     let sortBy = request.query.sortBy || "created_at";
     let sortType = request.query.sortType || "DESC";
@@ -28,8 +33,14 @@ module.exports = {
         limit,
         page
       );
+
+      const newData = {
+        result,
+        ...totalData,
+      };
+
       if (result[0]) {
-        return helper.response(response, "success", result, 200);
+        return helper.response(response, "success", newData, 200);
       } else {
         return helper.response(response, "fail", "Book Not Found", 404);
       }
