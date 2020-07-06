@@ -96,6 +96,67 @@ module.exports = {
     });
   },
 
+  // Show History By User ID
+  showHistoryByUserIdModel: function (id) {
+    return new Promise((resolve, reject) => {
+      let sql = `SELECT history.history_id, book.title AS book, users.username AS users, history.history_status, history.created_at, history.updated_at FROM history INNER JOIN book ON history.book_id = book.id INNER JOIN users ON history.user_id = users.id WHERE history.user_id=?`;
+      connection.query(sql, id, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(result);
+      });
+    });
+  },
+
+  // Show History By History ID
+  showHistoryByBookId: function (id) {
+    return new Promise((resolve, reject) => {
+      let sql = `SELECT history.history_id, book.title AS book, users.username AS users, history.history_status, history.created_at, history.updated_at FROM history INNER JOIN book ON history.book_id = book.id INNER JOIN users ON history.user_id = users.id WHERE history.book_id=?`;
+      connection.query(sql, id, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(result);
+      });
+    });
+  },
+
+  // Add history borrow
+  historyBorrowModel: function (setData) {
+    return new Promise((resolve, reject) => {
+      let sql = `INSERT INTO history SET ?`;
+      connection.query(sql, setData, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+
+        const newData = {
+          ...setData,
+        };
+
+        resolve(newData);
+      });
+    });
+  },
+
+  // Update history borrow
+  historyReturnModel: function (status, id) {
+    return new Promise((resolve, reject) => {
+      let sql = `UPDATE history SET history.history_status = ? WHERE history.book_id = ?`;
+      connection.query(sql, [status, id], (err, result) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(result);
+      });
+    });
+  },
+
+  // Borrow book status update
   borrowBookModel: function (status, id) {
     return new Promise((resolve, reject) => {
       let sql = `UPDATE book SET book.status = ? WHERE id=?`;
@@ -103,11 +164,17 @@ module.exports = {
         if (err) {
           reject(err);
         }
-        resolve(result);
+
+        const newData = {
+          id,
+          ...status,
+        };
+        resolve(newData);
       });
     });
   },
 
+  // Return book status update
   returnBookModel: function (status, id) {
     return new Promise((resolve, reject) => {
       let sql = `UPDATE book SET book.status=? WHERE id=?`;

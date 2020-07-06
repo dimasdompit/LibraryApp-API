@@ -109,7 +109,7 @@ module.exports = {
       if (result.id == id) {
         if (existImage != null) fs.unlinkSync(`./assets/images/${existImage}`);
         const newData = await modelBook.getBookDetailModel(id);
-        return helper.response(response, "success", result, 200);
+        return helper.response(response, "success", newData, 200);
       }
       return helper.response(
         response,
@@ -142,13 +142,26 @@ module.exports = {
     }
   },
 
+  showHistoryByUserId: async function (request, response) {
+    const id = request.params.id;
+    try {
+      const result = await modelBook.showHistoryByUserIdModel(id);
+      return helper.response(response, "success", result, 200);
+    } catch (err) {
+      console.log(err);
+      return helper.response(response, "fail", "Internal Server Error", 500);
+    }
+  },
+
   borrowBooks: async function (request, response) {
+    const setData = request.body;
     const id = request.params.id;
     try {
       const result = await modelBook.getBookDetailModel(id);
       if (result[0].status === "Available") {
         let status = result[0].status;
         status = "Not Available";
+        await modelBook.historyBorrowModel(setData);
         await modelBook.borrowBookModel(status, id);
         const message = `You have successfully borrowed '${result[0].title}' book`;
         return helper.response(response, "success", message, 200);
@@ -156,12 +169,12 @@ module.exports = {
         return helper.response(
           response,
           "fail",
-          `Sorry, '${result[0].title}' is Not Available!`,
+          `Sorry '${result[0].title}' is Not Available/Borrowed`,
           401
         );
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
       return helper.response(response, "fail", "Internal Server Error", 500);
     }
   },
@@ -170,10 +183,20 @@ module.exports = {
     const id = request.params.id;
     try {
       const result = await modelBook.getBookDetailModel(id);
-      if (result[0].status === "Not Available") {
+      const history = await modelBook.showHistoryByBookId(id);
+      const newHistory = {
+        ...history[0],
+      };
+      if (
+        result[0].status === "Not Available" &&
+        newHistory.history_status === "borrow"
+      ) {
         let status = result[0].status;
+        let newHistoryStatus = newHistory.history_status;
         status = "Available";
+        newHistoryStatus = "returned";
         await modelBook.returnBookModel(status, id);
+        await modelBook.historyReturnModel(newHistoryStatus, id);
         const message = `You have returned '${result[0].title}' book, thank you!`;
         return helper.response(response, "success", message, 200);
       } else {
