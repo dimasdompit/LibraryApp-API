@@ -111,9 +111,9 @@ module.exports = {
   },
 
   // Show History By History ID
-  showHistoryByBookId: function (id) {
+  showHistoryByIdModel: function (id) {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT history.history_id, book.title AS book, users.username AS users, history.history_status, history.created_at, history.updated_at FROM history INNER JOIN book ON history.book_id = book.id INNER JOIN users ON history.user_id = users.id WHERE history.book_id=?`;
+      let sql = `SELECT history.history_id, book.id AS book, users.username AS users, history.history_status, history.created_at, history.updated_at FROM history INNER JOIN book ON history.book_id = book.id INNER JOIN users ON history.user_id = users.id WHERE history.history_id=?`;
       connection.query(sql, id, (err, result) => {
         if (err) {
           reject(err);
@@ -145,7 +145,7 @@ module.exports = {
   // Update history borrow
   historyReturnModel: function (status, id) {
     return new Promise((resolve, reject) => {
-      let sql = `UPDATE history SET history.history_status = ? WHERE history.book_id = ?`;
+      let sql = `UPDATE history SET history.history_status = ? WHERE history.book_id AND history.user_id = ?`;
       connection.query(sql, [status, id], (err, result) => {
         if (err) {
           reject(err);

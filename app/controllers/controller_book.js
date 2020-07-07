@@ -181,23 +181,28 @@ module.exports = {
 
   returnBooks: async function (request, response) {
     const id = request.params.id;
+    const userId = request.decodeToken.id;
     try {
-      const result = await modelBook.getBookDetailModel(id);
-      const history = await modelBook.showHistoryByBookId(id);
+      const history = await modelBook.showHistoryByIdModel(id);
       const newHistory = {
         ...history[0],
       };
+      const bookId = newHistory.book;
+      const result = await modelBook.getBookDetailModel(bookId);
+      const newResult = {
+        ...result[0],
+      };
       if (
-        result[0].status === "Not Available" &&
+        newResult.status === "Not Available" &&
         newHistory.history_status === "borrow"
       ) {
-        let status = result[0].status;
+        let status = newResult.status;
         let newHistoryStatus = newHistory.history_status;
         status = "Available";
         newHistoryStatus = "returned";
-        await modelBook.returnBookModel(status, id);
-        await modelBook.historyReturnModel(newHistoryStatus, id);
-        const message = `You have returned '${result[0].title}' book, thank you!`;
+        await modelBook.returnBookModel(status, bookId);
+        await modelBook.historyReturnModel(newHistoryStatus, userId);
+        const message = `You have returned '${newResult.title}' book, thank you!`;
         return helper.response(response, "success", message, 200);
       } else {
         return helper.response(
