@@ -139,12 +139,7 @@ module.exports = {
       if (result.affectedRows == 1) {
         const image = data[0].image;
         fs.unlinkSync(`./assets/images/${image}`);
-        return helper.response(
-          response,
-          "success",
-          `Data with ID = ${id} successfully deleted`,
-          200
-        );
+        return helper.response(response, "success", result, 200);
       }
       return helper.response(
         response,
