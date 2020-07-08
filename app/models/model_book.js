@@ -90,6 +90,7 @@ module.exports = {
 
         const newData = {
           id,
+          ...result,
         };
         resolve(newData);
       });

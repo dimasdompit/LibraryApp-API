@@ -134,8 +134,24 @@ module.exports = {
   deleteBooks: async function (request, response) {
     const id = request.params.id;
     try {
+      const data = await modelBook.getBookDetailModel(id);
       const result = await modelBook.deleteBookModel(id);
-      return helper.response(response, "success", result, 200);
+      if (result.affectedRows == 1) {
+        const image = data[0].image;
+        fs.unlinkSync(`./assets/images/${image}`);
+        return helper.response(
+          response,
+          "success",
+          `Data with ID = ${id} successfully deleted`,
+          200
+        );
+      }
+      return helper.response(
+        response,
+        "fail",
+        `Data with ID = ${id} not found`,
+        404
+      );
     } catch (err) {
       console.log(err);
       return helper.response(response, "fail", "Internal Server Error", 500);
