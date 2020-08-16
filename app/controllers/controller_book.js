@@ -4,8 +4,8 @@ const joi = require("@hapi/joi");
 const fs = require("fs");
 
 const addBookSchema = joi.object({
-  title: joi.required(),
-  description: joi.required(),
+  title: joi.string().required(),
+  description: joi.string().required(),
   image: joi.string().required(),
   genre_id: joi.number().required(),
   author_id: joi.number().required(),
@@ -75,20 +75,26 @@ module.exports = {
     if (request.file) {
       setData.image = request.file.filename;
     }
+    if (request.fileValidationError) {
+      return helper.response(
+        response,
+        "fail",
+        request.fileValidationError,
+        400
+      );
+    }
+
     try {
-      await addBookSchema.validateAsync(setData);
-      const result = await modelBook.addBookModel(setData);
-      return helper.response(response, "success", result, 201);
+      const validation = addBookSchema.validate(setData);
+      if (validation.error === undefined) {
+        const result = await modelBook.addBookModel(setData);
+        return helper.response(response, "success", result, 201);
+      }
+      let errorMsg = validation.error.details[0].message;
+      errorMsg = errorMsg.replace(/"/g, "");
+      return helper.response(response, "fail", errorMsg, 400);
     } catch (err) {
       console.log(err);
-      if (err.response === undefined) {
-        return helper.response(
-          response,
-          "fail",
-          "Format image must be : JPG/JPEG/PNG",
-          401
-        );
-      }
       return helper.response(response, "fail", "Internal Server Error", 500);
     }
   },

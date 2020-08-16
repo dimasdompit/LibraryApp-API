@@ -8,8 +8,8 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const splitName = file.originalname.split(".");
     const ext = splitName.pop();
-    const newName = splitName.join("-");
-    cb(null, `${newName}-${Date.now()}.${ext}`);
+    const titleName = req.body.title.split(" ").join("-");
+    cb(null, `${titleName}-${Date.now()}.${ext}`);
   },
 });
 
@@ -21,6 +21,7 @@ const fileFilter = (req, file, cb) => {
   ) {
     cb(null, true);
   } else {
+    req.fileValidationError = "Only .jpeg, .jpg and .png images allowed!";
     cb(null, false);
   }
 };
@@ -28,7 +29,7 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 1 * 1024 * 1024,
+    fileSize: 4 * 1024 * 1024,
   },
 });
 
