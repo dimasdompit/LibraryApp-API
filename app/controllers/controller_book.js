@@ -12,6 +12,15 @@ const addBookSchema = joi.object({
   status: joi.string().required(),
 });
 
+const editBookSchema = joi.object({
+  title: joi.string().required(),
+  description: joi.string().required(),
+  image: joi.string().required(),
+  genre_id: joi.number().required(),
+  author_id: joi.number().required(),
+  status: joi.string().required(),
+});
+
 module.exports = {
   showAllBooks: async function (request, response) {
     const totalBooks = await modelBook.totalBooksModel();
@@ -111,28 +120,35 @@ module.exports = {
       existImage = existData[0].image;
     }
     try {
-      const result = await modelBook.updateBookModel(setData, id);
-      if (result.id == id) {
-        if (existImage != null) fs.unlinkSync(`./assets/images/${existImage}`);
-        const newData = await modelBook.getBookDetailModel(id);
-        return helper.response(response, "success", newData, 200);
-      }
-      return helper.response(
-        response,
-        "fail",
-        `Book with ID = ${id} not found`,
-        404
-      );
-    } catch (err) {
-      console.log(err);
-      if (err.response === undefined) {
+      if (request.fileValidationError) {
         return helper.response(
           response,
           "fail",
-          "Format image must be : JPG/JPEG/PNG",
-          401
+          request.fileValidationError,
+          400
         );
       }
+      const validation = editBookSchema.validate(setData);
+      if (validation.error === undefined) {
+        const result = await modelBook.updateBookModel(setData, id);
+        if (result.id == id) {
+          if (existImage != null)
+            fs.unlinkSync(`./assets/images/${existImage}`);
+          const newData = await modelBook.getBookDetailModel(id);
+          return helper.response(response, "success", newData, 200);
+        }
+        return helper.response(
+          response,
+          "fail",
+          `Book with ID = ${id} not found`,
+          404
+        );
+      }
+      let errorMsg = validation.error.details[0].message;
+      errorMsg = errorMsg.replace(/"/g, "");
+      return helper.response(response, "fail", errorMsg, 400);
+    } catch (err) {
+      console.log(err);
       return helper.response(response, "fail", "Internal Server Error", 500);
     }
   },
