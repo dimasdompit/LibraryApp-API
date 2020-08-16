@@ -18,7 +18,7 @@ module.exports = {
     const totalData = {
       ...totalBooks,
     };
-    console.log(totalBooks);
+    // console.log(totalBooks);
     const search = request.query.search || "";
     let sortBy = request.query.sortBy || "created_at";
     let sortType = request.query.sortType || "DESC";
@@ -192,7 +192,6 @@ module.exports = {
 
   returnBooks: async function (request, response) {
     const id = request.params.id;
-    const userId = request.decodeToken.id;
     try {
       const history = await modelBook.showHistoryByIdModel(id);
       const newHistory = {
@@ -212,7 +211,7 @@ module.exports = {
         status = "Available";
         newHistoryStatus = "returned";
         await modelBook.returnBookModel(status, bookId);
-        await modelBook.historyReturnModel(newHistoryStatus, userId);
+        await modelBook.historyReturnModel(newHistoryStatus, id);
         const message = `You have returned '${newResult.title}' book, thank you!`;
         return helper.response(response, "success", message, 200);
       } else {

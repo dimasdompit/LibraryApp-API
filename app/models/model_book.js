@@ -143,24 +143,10 @@ module.exports = {
     });
   },
 
-  // Update history borrow
-  historyReturnModel: function (status, id) {
-    return new Promise((resolve, reject) => {
-      let sql = `UPDATE history SET history.history_status = ? WHERE history.book_id AND history.user_id = ?`;
-      connection.query(sql, [status, id], (err, result) => {
-        if (err) {
-          reject(err);
-        }
-
-        resolve(result);
-      });
-    });
-  },
-
   // Borrow book status update
   borrowBookModel: function (status, id) {
     return new Promise((resolve, reject) => {
-      let sql = `UPDATE book SET book.status = ? WHERE id=?`;
+      let sql = `UPDATE book SET book.status = ? WHERE book.id=?`;
       connection.query(sql, [status, id], (err, result) => {
         if (err) {
           reject(err);
@@ -171,6 +157,20 @@ module.exports = {
           ...status,
         };
         resolve(newData);
+      });
+    });
+  },
+
+  // Update history borrow
+  historyReturnModel: function (status, id) {
+    return new Promise((resolve, reject) => {
+      let sql = `UPDATE history SET history.history_status = ? WHERE history.history_id = ?`;
+      connection.query(sql, [status, id], (err, result) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(result);
       });
     });
   },
