@@ -24,10 +24,12 @@ const editBookSchema = joi.object({
 module.exports = {
   showAllBooks: async function (request, response) {
     const totalBooks = await modelBook.totalBooksModel();
+
     const totalData = {
       ...totalBooks,
     };
-    // console.log(totalBooks);
+    const newTotal = totalData["COUNT(*)"];
+
     const search = request.query.search || "";
     let sortBy = request.query.sortBy || "created_at";
     let sortType = request.query.sortType || "DESC";
@@ -45,7 +47,7 @@ module.exports = {
 
       const newData = {
         result,
-        ...totalData,
+        totalBooks: newTotal,
       };
 
       if (result[0]) {
@@ -81,8 +83,10 @@ module.exports = {
 
   addBooks: async function (request, response) {
     const setData = request.body;
-    if (request.file) {
+    if (request.file !== undefined) {
       setData.image = request.file.filename;
+    } else {
+      setData.image = "default-book.png";
     }
     if (request.fileValidationError) {
       return helper.response(
@@ -132,7 +136,7 @@ module.exports = {
       if (validation.error === undefined) {
         const result = await modelBook.updateBookModel(setData, id);
         if (result.id == id) {
-          if (existImage != null)
+          if (existImage != null && existImage !== "default-book.png")
             fs.unlinkSync(`./assets/images/${existImage}`);
           const newData = await modelBook.getBookDetailModel(id);
           return helper.response(response, "success", newData, 200);
@@ -160,7 +164,9 @@ module.exports = {
       const result = await modelBook.deleteBookModel(id);
       if (result.affectedRows == 1) {
         const image = data[0].image;
-        fs.unlinkSync(`./assets/images/${image}`);
+        if (image !== "default-book.png") {
+          fs.unlinkSync(`./assets/images/${image}`);
+        }
         return helper.response(response, "success", result, 200);
       }
       return helper.response(
